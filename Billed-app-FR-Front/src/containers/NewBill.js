@@ -16,30 +16,43 @@ export default class NewBill {
     new Logout({ document, localStorage, onNavigate })
   }
   handleChangeFile = e => {
-    e.preventDefault()
-    const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
-    const filePath = e.target.value.split(/\\/g)
-    const fileName = filePath[filePath.length-1]
-    const formData = new FormData()
-    const email = JSON.parse(localStorage.getItem("user")).email
-    formData.append('file', file)
-    formData.append('email', email)
+    e.preventDefault();
+	//On choisi l'élément input du fichier
+	const fileInput = this.document.querySelector(`input[data-testid="file"]`);
 
-    this.store
-      .bills()
-      .create({
-        data: formData,
-        headers: {
-          noContentType: true
-        }
-      })
-      .then(({fileUrl, key}) => {
-        console.log(fileUrl)
-        this.billId = key
-        this.fileUrl = fileUrl
-        this.fileName = fileName
-      }).catch(error => console.error(error))
-  }
+	//On récupère le fichier
+	const file = fileInput.files[0];
+	const fileName = file.name;
+
+	//On définit la liste des extensions de fichiers possible à envoyer
+	const validFileExtensions = ["jpg", "jpeg", "png"];
+
+	//On sépare le nom de fichier de l'extension, pour obtenir l'extension
+	const fileNameParts = fileName.split(".");
+	const fileExtension = fileNameParts[fileNameParts.length - 1].toLowerCase();
+	
+	//On initialise l'état de validation de l'extension
+	this.isImgFormatValid = false;
+
+	//Si l'extension de fichier correspond à ceux acceptés, on change son état
+	if (fileNameParts.length > 1 && validFileExtensions.includes(fileExtension)) {
+		this.isImgFormatValid = true;
+	}
+	
+	//Si l'extension de fichier n'est pas valide, on affiche un message d'erreur
+	if (!this.isImgFormatValid) {
+		fileInput.value = "";
+		alert("Ce format de fichier n'est pas pris en charge.\nVeuillez choisir un fichier jpg, jpeg ou png.");
+	//Sinon, si l'extension de fichier est valide, on stocke les valeurs pour les utiliser avec un submit
+	} else {
+		const formData = new FormData();
+		const email = JSON.parse(localStorage.getItem("user")).email;
+		formData.append("file", file);
+		formData.append("email", email);
+		this.formData = formData;
+		this.fileName = fileName;
+	}
+};
   handleSubmit = e => {
     e.preventDefault()
     console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
