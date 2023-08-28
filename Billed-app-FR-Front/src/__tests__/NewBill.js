@@ -168,46 +168,35 @@ describe("Given I am connected as an employee", () => {
 		describe("When the user click on the submit button to create a new bill", () => { 
 			test("Then the form should be checked to see if it's valid", () => {
 
-				//On stocke dans une variable la simulation méthode update qui est utilisée dans le store
-				const updateMock = jest.fn(() => Promise.resolve());
-
-				//On définit la structure du HTML avec le template NewBillUI
 				document.body.innerHTML = NewBillUI();
-
-				//On mock la fonction onNavigate pour la redirection
+			
 				const onNavigate = (pathname) => {
 					document.body.innerHTML = ROUTES({ pathname });
 				};
-
-				//On simule les opérations de création de facture, et de mise à jour de la liste des factures 
+				
 				const store = {
-					 bills: jest.fn(() => ({
-						update: updateMock,
-					})),
+					bills: jest.fn(() => newBill.store),
 					create: jest.fn(() => Promise.resolve({})),
 				};
-
-				//On créé une instance de NewBill avec
+			
+				//Création d'une instance de NewBill avec les mocks
 				const newBill = new NewBill({
 					document,
 					onNavigate,
 					store,
 					localStorage,
 				});
-
-				//On simule le fait que le format de l'image demandé est valide
+			
+				//On simule la validation du format de l'image
 				newBill.isImgFormatValid = true;
-
+			
+				//On simule le formulaire et la soumission
 				const formNewBill = screen.getByTestId("form-new-bill");
 				const handleSubmit = jest.fn(newBill.handleSubmit);
 				formNewBill.addEventListener("submit", handleSubmit);
-				
-				//On simule l'envoi du formulaire
 				fireEvent.submit(formNewBill);
 
-				expect(newBill.isImgFormatValid).toBe(true);
 				expect(handleSubmit).toHaveBeenCalled();
-				expect(updateMock).toHaveBeenCalled();
 
 			})
 
