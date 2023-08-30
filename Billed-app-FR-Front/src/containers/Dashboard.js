@@ -132,11 +132,6 @@ export default class {
 
   handleShowTickets(e, bills, index) {
 
-    //Réparation du bug d'affichage des factures dans le dashboard admin
-    bills.forEach((bill) => {
-      $(`#open-bill${bill.id}`).off("click");
-    });
-
     if (this.counter === undefined || this.index !== index) this.counter = 0
     if (this.index === undefined || this.index !== index) this.index = index
     if (this.counter % 2 === 0) {
@@ -151,7 +146,10 @@ export default class {
     }
 
     bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
+      //Réparation du bug d'affichage des factures dans le dashboard admin
+      //On utilise la méthode off() sur le click pour que la méthode handleEditTicket soit réinitialisé à chaque nouveau clic sur un ticket
+      $(`#open-bill${bill.id}`).off("click");
+      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills));
     })
 
     return bills

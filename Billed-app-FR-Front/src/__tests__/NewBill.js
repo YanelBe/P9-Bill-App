@@ -22,9 +22,9 @@ describe("Given I am connected as an employee", () => {
 	beforeEach(async () => {
 		//On utilise la méthode defineProperty() pour notre test
 		//On simule le localStorage avec localStorageMock, et on simule l'utilisateur employé
-		Object.defineProperty(window, 'localStorage', { value: localStorageMock })
-		window.localStorage.setItem('user', JSON.stringify({
-			type: 'Employee'
+		Object.defineProperty(window, "localStorage", { value: localStorageMock })
+		window.localStorage.setItem("user", JSON.stringify({
+			type: "Employee"
 		}))
 
 		const root = document.createElement("div")
@@ -246,8 +246,8 @@ describe("Given I am connected as an employee", () => {
 			describe("When an error occurs on API", () => {
 
 				beforeEach(() => {
-					window.localStorage.setItem('user', JSON.stringify({
-						type: 'Employee'
+					window.localStorage.setItem("user", JSON.stringify({
+						type: "Employee"
 					  }))
 					document.body.innerHTML = NewBillUI();
 				});

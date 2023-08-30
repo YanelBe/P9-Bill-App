@@ -11,7 +11,6 @@ import Bills from "../containers/Bills.js";
 
 import { bills } from "../fixtures/bills.js";
 import { ROUTES, ROUTES_PATH, } from "../constants/routes.js";
-import { formatDate, formatStatus } from "../app/format.js"
 
 import { localStorageMock } from "../__mocks__/localStorage.js";
 import mockStore from "../__mocks__/store.js";
@@ -56,8 +55,7 @@ describe("Given I am connected as an employee", () => {
     })
 
     
-    test("Then bills date should be formatted correctly", async () => {
-
+    test("Then bills should be formatted correctly", async () => {
       const billsClass = new Bills({
         document,
         onNavigate,
@@ -72,16 +70,13 @@ describe("Given I am connected as an employee", () => {
       
       expect(listSpy).toHaveBeenCalled();
       expect(formattedBills).toEqual(expect.any(Array));
-    
     });
-    
   })
-
 })
 
 
 
-describe("Given I am connected as an employee or as an admin", () => {
+describe("Given I am connected as an employee", () => {
 
   //On utilise la fonction jest beforeEach() pour exécuter du code avant chaque test, pour éviter certaines répétitions
   beforeEach(async () => {
@@ -140,46 +135,46 @@ describe("Given I am connected as an employee or as an admin", () => {
 
   describe("When I click on the icon eye", () => {
     //Test pour vérifier si une modale s'ouvre correctement lorsqu'on clique sur une icône en forme d'oeil
-    test("Then a modal should open", () => { 
+      test("Then a modal should open", () => { 
 
-      //On génère le HTML de la page avec les données de bills et on l'injecte dans le DOM
-      const html = BillsUI({ data: bills });
-      document.body.innerHTML = html;
+        //On génère le HTML de la page avec les données de bills et on l'injecte dans le DOM
+        const html = BillsUI({ data: bills });
+        document.body.innerHTML = html;
 
-      //On stocke l'état global de l'application
-      const store = null;
+        //On stocke l'état global de l'application
+        const store = null;
 
-      //On créé une instance de la classe Bills pour simuler le comportement de l'utilisateur
-      const billsClass = new Bills({
-        document,
-        onNavigate,
-        store,
-        localStorageMock,
-      });
+        //On créé une instance de la classe Bills pour simuler le comportement de l'utilisateur
+        const billsClass = new Bills({
+          document,
+          onNavigate,
+          store,
+          localStorageMock,
+        });
 
-      //La méthode jest.fn va simuler la méthode "modal" de jQuery pour vérifier si son comportement est correct
-      $.fn.modal = jest.fn();
+        //La méthode jest.fn va simuler la méthode "modal" de jQuery pour vérifier si son comportement est correct
+        $.fn.modal = jest.fn();
 
-      //La méthode jest.fn va simuler la méthode handleClickIconEye pour vérifier ensuite si elle est appelée
-      const handleClickIconEye = jest.fn(billsClass.handleClickIconEye);
+        //La méthode jest.fn va simuler la méthode handleClickIconEye pour vérifier ensuite si elle est appelée
+        const handleClickIconEye = jest.fn(billsClass.handleClickIconEye);
 
-      //On recherche et sélectionne les icônes d'oeil dans le DOM, et on simule le clic sur chacune de ces icones 
-      const iconEye = screen.getAllByTestId("icon-eye");
-      iconEye.forEach((icon) => {
-        icon.addEventListener("click", () => handleClickIconEye(icon));
-        userEvent.click(icon);
-      });
+        //On recherche et sélectionne les icônes d'oeil dans le DOM, et on simule le clic sur chacune de ces icones 
+        const iconEye = screen.getAllByTestId("icon-eye");
+        iconEye.forEach((icon) => {
+          icon.addEventListener("click", () => handleClickIconEye(icon));
+          userEvent.click(icon);
+        });
 
-      //On vérifie maintenant que la méthode handleClickIconEye a bien été appelée
-      expect(() => handleClickIconEye()).toThrow();
-      expect(() => handleClickIconEye()).toThrow(Error);
-      expect(handleClickIconEye).toHaveBeenCalled();
+        //On vérifie maintenant que la méthode handleClickIconEye a bien été appelée
+        expect(() => handleClickIconEye()).toThrow();
+        expect(() => handleClickIconEye()).toThrow(Error);
+        expect(handleClickIconEye).toHaveBeenCalled();
 
-      //On recherche l'ID de la modale censée apparaître lors du clic sur une icône d'oeil, et on confirme sa présence
-      const modal = document.getElementById("modaleFile");
-      expect(modal).toBeTruthy();
-      })
-  })
+        //On recherche l'ID de la modale censée apparaître lors du clic sur une icône d'oeil, et on confirme sa présence
+        const modal = document.getElementById("modaleFile");
+        expect(modal).toBeTruthy();
+        })
+    })
 })
 
 
@@ -218,7 +213,7 @@ describe("Given I am a user connected as Employee", () => {
 
       test("Then it should fetch the bills from API and fails with 404 message error", async () => {
         const listSpy = jest.spyOn(mockStore.bills(), "list");
-        // Lorsque vous devez recréer un comportement complexe d'une fonction simulée, de sorte que plusieurs appels de fonction produisent des résultats différents, utilisez la méthode mockImplementationOnce :
+        //On utilise la méthode mockImplementationOnce pour simuler une appel à une fonction simulée
         listSpy.mockImplementationOnce(() => {
           return {
             list : () =>  {

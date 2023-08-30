@@ -20,7 +20,7 @@ export default class NewBill {
     //On choisi l'élément input du fichier
     const fileInput = this.document.querySelector(`input[data-testid="file"]`);
 
-    //On récupère le fichier
+    //On récupère le fichier et son nom
     const file = fileInput.files[0];
     const fileName = file.name;
 

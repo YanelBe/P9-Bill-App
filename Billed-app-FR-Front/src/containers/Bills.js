@@ -38,7 +38,10 @@ export default class {
             try {
               return {
                 ...doc,
-                date: formatDate(doc.date),
+                //Modification ici du code, on indique une date non formatée et une autre formatée
+                //On va ensuite créer une condition pour choisir d'utiliser une date ou une autre pour gérer le tri des dates et son affichage
+                date: doc.date,
+                formatedDate: formatDate(doc.date),
                 status: formatStatus(doc.status)
               }
             } catch(e) {
@@ -58,3 +61,4 @@ export default class {
     }
   }
 }
+

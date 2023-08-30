@@ -5,11 +5,14 @@ import LoadingPage from "./LoadingPage.js"
 import Actions from './Actions.js'
 
 const row = (bill) => {
+  //On utilise une variable conditionnelle pour pouvoir utiliser les dates non formatées pour le tri des dates
+  //En retour, ce sont bien les dates formatées qui seront affichées sur l'application
+  const dateBill = bill.formatedDate ?? bill.date;
   return (`
     <tr>
       <td>${bill.type}</td>
       <td>${bill.name}</td>
-      <td>${bill.date}</td>
+      <td>${dateBill}</td>
       <td>${bill.amount} €</td>
       <td>${bill.status}</td>
       <td>
@@ -19,17 +22,25 @@ const row = (bill) => {
     `)
   }
 
-  //Modification pour le tri correct des dates
-  const rows = (data) => {
-    const sortedDataByDate =
-      data && data.length > 0
-        ? data.sort((a, b) => new Date(b.date) - new Date(a.date))
-        : "";
-  
-    return data && data.length
-      ? sortedDataByDate.map((bill) => row(bill)).join("")
+//Modification pour le tri correct des dates
+const rows = (data) => {
+  //On trie le tableau data, en ordre décroissant (du plus récent au plus ancien) et on stocke le résultat dans une variable
+  const sortedDataByDate =
+    //Ternaire : si le tableau n'est pas vide, on active la suite
+    data && data.length > 0
+      //La méthode sort compare une date a avec une date b
+      ? data.sort((a, b) => new Date(b.date) - new Date(a.date))
       : "";
-  };
+
+  return data && data.length
+    //On vérifie de nouveau si le tableau est vide, puis on utilise la méthode map() pour appliquer la fonction à chaque bill
+    //Puis on utilise la méthode join() pour combiner les lignes générées par la fonction row
+    ? sortedDataByDate.map((bill) => row(bill)).join("")
+    : "";
+    
+};
+
+
 
 export default ({ data: bills, loading, error }) => {
   
@@ -55,6 +66,7 @@ export default ({ data: bills, loading, error }) => {
   } else if (error) {
     return ErrorPage(error)
   }
+  
   
   return (`
     <div class='layout'>
